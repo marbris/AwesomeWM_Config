@@ -71,6 +71,18 @@ function _M.get(clientkeys, clientbuttons)
       }
     },
 
+    --The screen counting function doesn't work. it always returns '2'. but I'll keep it for now
+    --The matplotlib figures should be floating and on the other screeen
+    { rule_any = {
+        name = {"Figure *"}
+              },
+      properties = {
+        floating = true,
+        screen = function () return screen.count() end,
+        focus = true
+      }
+    }
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },

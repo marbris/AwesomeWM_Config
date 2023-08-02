@@ -10,6 +10,10 @@ local beautiful = require("beautiful")
 -- Miscellanous awesome library
 local menubar = require("menubar")
 
+
+-- Themes
+require("main.theme")
+
 RC = {} -- global namespace, on top before require any modules
 RC.vars = require("main.user-variables")
 modkey = RC.vars.modkey
@@ -17,8 +21,7 @@ modkey = RC.vars.modkey
 -- Error handling
 require("main.error-handling")
 
--- Themes
-require("main.theme")
+
 
 -- -- --
 
@@ -80,13 +83,20 @@ require("main.signals")
 -- Statusbar: Wibar
 --local statusbar = require("statusbar.default.statusbar")
 --local statusbar = require("statusbar.stacked.statusbar")
-local statusbar = require("statusbar.vicious.statusbar")
---local statusbar = require("statusbar.lain.statusbar")
---local statusbar = require("statusbar.arrow.statusbar")
+--local statusbar = require("statusbar.vicious.statusbar")
+-- --local statusbar = require("statusbar.lain.statusbar")
+-- --local statusbar = require("statusbar.arrow.statusbar")
+
+local statusbar = require('MyStatusBar')
 statusbar()
 
 
+------Start at startup
+awful.spawn('bash /home/martin/.screenlayout/Layout_at_Work.sh')
+awful.spawn('compton --backend glx')
 
---- hotkeys_popup
-require("hotkeys_popup")
+
+--- hotkeys_popup. Extra hotkeys
+--- Extra hotkeys are already added with require(awful.hotkeys_popup.keys)
+---require("hotkeys_popup")
 

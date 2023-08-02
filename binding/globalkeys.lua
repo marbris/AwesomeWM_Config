@@ -2,9 +2,13 @@
 local gears = require("gears")
 local awful = require("awful")
 -- local hotkeys_popup = require("awful.hotkeys_popup").widget
-local hotkeys_popup = require("awful.hotkeys_popup")
+local hotkeys_popup =  require("My_hotkeys_popup")
+--require("awful.hotkeys_popup")
+--                require("awful.hotkeys_popup.keys")
 -- Menubar library
-local menubar = require("menubar")
+--local menubar = require("menubar")
+
+local beautiful = require("beautiful")
 
 -- Resource Configuration
 local modkey = RC.vars.modkey
@@ -82,33 +86,102 @@ function _M.get()
 
 
     -- Applications
-    awful.key({modkey, },   'Return', function() awful.spawn(terminal) end,
-              {description = 'Terminal', group = 'Applications'}),
+    -- awful.key({modkey, },   'Return', function() awful.spawn(terminal) end,
+    --           {description = 'Terminal', group = 'Applications'}),
+    -- awful.key({modkey, },   'e', function() awful.spawn(filebrowser) end,
+    -- {description = 'File Browser', group = 'Applications'}),
+    
+    -- Launch terminal. Special launch commands for some tags to open in the right directory
+
+    awful.key({modkey, },   'Return', 
+              function() 
+                  local t = awful.screen.focused().selected_tag
+                  if (t.terminal_launch_command) then
+                    awful.spawn(t.terminal_launch_command)
+                    --awful.spawn(terminal.. " --hold -e sh -c 'cd ~/.config/awesome && exec zsh'")
+                  else
+                    awful.spawn(terminal)
+                  end
+              end,
+              {description = "Terminal", group = "Applications"}),
+
+
+    awful.key({modkey, },   'e', 
+              function() 
+                  local t = awful.screen.focused().selected_tag
+                  if (t.filebrowser_launch_command) then
+                    awful.spawn(t.filebrowser_launch_command)
+                  else
+                    awful.spawn(filebrowser)
+                  end
+              end,
+              {description = 'File Browser', group = 'Applications'}),
+
+    awful.key({modkey, },   'w', 
+              function() 
+                  local t = awful.screen.focused().selected_tag
+                  if (t.codeeditor_launch_command) then
+                    awful.spawn(t.codeeditor_launch_command)
+                  else
+                    awful.spawn(codeeditor)
+                  end
+              end,
+              {description = 'VScodium', group = 'Applications'}),
+          
+    
+
     -- awful.key({ modkey },            "r",     function () awful.spawn("bash ~/.config/rofi/launchers/type-4/launcher.sh") end,
     -- {description = "run rofi", group = "launcher"}),
     awful.key({ modkey },   "a",     function () awful.spawn(launchmenu) end,
                 {description = "Launch Menu", group = "Applications"}),
     awful.key({modkey, },   'q', function() awful.spawn(browser) end,
                 {description = 'QuteBrowser', group = 'Applications'}),
-    awful.key({modkey, },   'e', function() awful.spawn(filebrowser) end,
-                {description = 'File Browser', group = 'Applications'}),
     awful.key({modkey, },   'z', function() awful.spawn(zotero) end,
                 {description = 'Zotero', group = 'Applications'}),
-    awful.key({modkey, },   'w', function() awful.spawn(codeeditor) end,
-                {description = 'VScodium', group = 'Applications'}),
+    
 
 
     -- Utilities
     awful.key({modkey, 'Shift'}, 'Delete', function() awful.spawn('reboot') end,
               {description = 'Reboot Computer', group = 'Utilities'}),
+
     awful.key({modkey, 'Control'}, 'Delete', function() awful.spawn('shutdown now') end,
-              {description = 'Shutdown Computer', group = 'Utilities'}),    
+              {description = 'Shutdown Computer', group = 'Utilities'}),
+
     awful.key({ modkey, }, "F2", awesome.restart,
               {description = "Reload Awesome", group = "Utilities"}),
+
     awful.key({ modkey, }, "F3", awesome.quit,
               {description = "Quit Awesome", group = "Utilities"}),
+
     awful.key({modkey}, 'F1', hotkeys_popup.show_help,
               {description = 'Show Help', group = 'Utilities'}),
+
+    awful.key({modkey, 'Shift'}, 'F12', function() awful.spawn("nm-applet") end,
+              {description = 'nm-applet', group = 'Utilities'}),
+      
+    awful.key({  }, "XF86AudioRaiseVolume",
+                function ()
+                    os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+                    beautiful.volume.update()
+                end,
+                {description = "Volume up", group = "Utilities"}),
+    awful.key({ }, "XF86AudioLowerVolume",
+                function ()
+                    os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+                    beautiful.volume.update()
+                end,
+                {description = "volume down", group = "Utilities"}),
+
+
+    awful.key({  }, "XF86AudioMute",
+                function ()
+                    os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+                    beautiful.volume.update()
+                end,
+                {description = "toggle mute", group = "Utilities"}),
+              
+    
     -- awful.key({modkey, }, 'Escape', function() _G.exit_screen_show() end,
     --           {description = 'Log Out Screen', group = 'Utilities'}),
     -- awful.key({modkey, }, 'End', function() awful.spawn(lock) end,
@@ -170,12 +243,12 @@ function _M.get()
     --           function ()
     --               awful.prompt.run {
     --                 prompt       = "Run Lua code: ",
-    --                 textbox      = awful.screen.focused().mypromptbox.widget,
+    --                 textbox      = awful.screen.focused().promptbox.widget,
     --                 exe_callback = awful.util.eval,
     --                 history_path = awful.util.get_cache_dir() .. "/history_eval"
     --               }
     --           end,
-    --           {description = "lua execute prompt", group = "awesome"}),
+    --           {description = "lua execute prompt", group = "awesome"})
 
     -- Menubar
     -- awful.key({ modkey }, "p", function() menubar.show() end,
