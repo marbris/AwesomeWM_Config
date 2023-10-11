@@ -36,6 +36,27 @@ client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", {raise = false})
 end)
 
+-- Set border color
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+-- Refocus previous window on close
+function backham()
+    local s = awful.screen.focused()
+    local c = awful.client.focus.history.get(s, 0)
+    if c then
+        client.focus = c
+        c:raise()
+    end
+end
+client.connect_signal("property::minimized", backham)
+--+ attach to minimized state
+client.connect_signal("unmanage", backham)
+--+ attach to closed state
+tag.connect_signal("property::selected", backham) 
+--|ensure there is always a selected client during tag
+--|switching or logins
+
+
+
 -- }}}

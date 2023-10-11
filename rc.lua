@@ -1,5 +1,6 @@
 pcall(require, "luarocks.loader")
 
+
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
@@ -92,9 +93,9 @@ statusbar()
 
 
 ------Start at startup
-awful.spawn('bash /home/martin/.screenlayout/Layout_at_Work.sh')
-awful.spawn('compton --backend glx')
-
+--awful.spawn('bash /home/martin/.screenlayout/Layout_at_Work.sh')
+--awful.spawn('picom --backend glx --vsync opengl-swc')
+--awful.spawn.with_shell('picom --config ~/.config/picom/picom.conf')
 
 --- hotkeys_popup. Extra hotkeys
 --- Extra hotkeys are already added with require(awful.hotkeys_popup.keys)

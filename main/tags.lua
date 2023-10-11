@@ -16,6 +16,7 @@ function _M.get ()
   local tags = {
     { --tag #1
       icon = beautiful.tag_icon_communication,
+      focus_after_reload = true,
       -- type = 'Browser',
       -- defaultApp = RC.vars.browser
     },
@@ -60,7 +61,7 @@ function _M.get ()
     terminal_launch_command = terminal.. " --hold -e sh -c 'cd ~/.config/awesome && exec zsh'",
     filebrowser_launch_command = filebrowser.. " -w .config/awesome",
     codeeditor_launch_command = codeeditor.. " .config/awesome/",
-    focus_after_reload = true,
+    focus_after_reload = false,
     --layout = RC.layouts[2]
     -- type = 'any',
     -- defaultApp = apps.default.rofi,
